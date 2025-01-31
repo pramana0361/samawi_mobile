@@ -28,7 +28,7 @@ class _RegisterViewState extends State<RegisterView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'SAMAWI',
+              'SIMAWI',
               style: TextStyle(
                 fontSize: 38.sp,
                 fontWeight: FontWeight.w700,

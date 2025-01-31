@@ -68,6 +68,9 @@ class _RegistrasiPasienViewState extends State<RegistrasiPasienView> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            SizedBox(
+                              height: 10.h,
+                            ),
                             TextFormField(
                               initialValue:
                                   data == null ? null : patientModel.name,
@@ -453,15 +456,13 @@ class _RegistrasiPasienViewState extends State<RegistrasiPasienView> {
                                                   patientListModel[
                                                           selectedIndex]
                                                       .recordNumber;
-                                              DateTime visitDate =
-                                                  DateTime.now();
+                                              DateTime? visitDate;
                                               final DateTime? picked =
                                                   await showDatePicker(
-                                                      context: context,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      firstDate: DateTime(1900),
-                                                      lastDate: DateTime(2100));
+                                                context: context,
+                                                firstDate: DateTime.now(),
+                                                lastDate: DateTime(2100),
+                                              );
                                               if (picked != null) {
                                                 visitDate = picked;
                                               }
@@ -471,7 +472,7 @@ class _RegistrasiPasienViewState extends State<RegistrasiPasienView> {
                                                 id: 0,
                                                 recordNumber:
                                                     patientRecordNumber,
-                                                dateVisit: visitDate
+                                                dateVisit: visitDate!
                                                     .millisecondsSinceEpoch,
                                                 registeredBy:
                                                     userProvider.user.id,

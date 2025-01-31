@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:simawi_mobile/providers/user_provider.dart';
+import 'package:simawi_mobile/services/database_service.dart';
 import 'package:simawi_mobile/utils/enums.dart';
+import 'package:simawi_mobile/views/login_view.dart';
 import 'package:simawi_mobile/views/manage_user_view.dart';
 import 'package:simawi_mobile/views/registrasi_pasien_view.dart';
 import 'package:simawi_mobile/views/rekam_medis_view.dart';
@@ -26,7 +28,7 @@ class _DashboardViewState extends State<DashboardView> {
             title: const Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'SAMAWI',
+                'SIMAWI',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.teal,
@@ -43,15 +45,38 @@ class _DashboardViewState extends State<DashboardView> {
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                     ),
-                    child: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 15.sp,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(
                           Icons.account_circle,
                           color: Colors.grey[700],
                         ),
-                        Text(userProvider.user.name),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5.w,
+                            ),
+                            child: Text(
+                              userProvider.user.name,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => const LoginView(),
+                              ),
+                              (Route<dynamic> route) => false,
+                            );
+                          },
+                          child: const Icon(
+                            Icons.door_back_door_rounded,
+                            color: Colors.black54,
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -102,19 +127,69 @@ class _DashboardViewState extends State<DashboardView> {
           body: FractionallySizedBox(
             heightFactor: 1.0,
             widthFactor: 1.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'DASHBOARD',
-                  style: TextStyle(
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.grey[300],
-                  ),
-                ),
-              ],
+            child: FutureBuilder(
+              future: DatabaseService.countPatientAll(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    final patientCount = snapshot.data!;
+                    return Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 0.7.sw,
+                          height: 0.25.sh,
+                          margin: EdgeInsets.symmetric(vertical: 20.h),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'JUMLAH PASIEN',
+                                style: TextStyle(
+                                  fontSize: 22.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              Text(
+                                '$patientCount',
+                                style: TextStyle(
+                                  fontSize: 62.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Text(
+                      'ERROR',
+                      style: TextStyle(
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.grey[300],
+                      ),
+                    );
+                  }
+                } else {
+                  return SizedBox.square(
+                    dimension: 50.sp,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.teal,
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
           ),
         );

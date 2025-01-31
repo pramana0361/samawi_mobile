@@ -17,6 +17,10 @@ class RekamMedisView extends StatefulWidget {
 
 class _RekamMedisViewState extends State<RekamMedisView> {
   Future<void> emrDialog({required PatientHistoryModel data}) {
+    final emrFormKey = GlobalKey<FormState>();
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    PatientHistoryModel patientHistoryModel = data;
     return showDialog(
       context: context,
       builder: (context) {
@@ -37,15 +41,166 @@ class _RekamMedisViewState extends State<RekamMedisView> {
             body: FractionallySizedBox(
               widthFactor: 1.0,
               heightFactor: 1.0,
-              // TODO: Form input EMR
-              child: Center(
-                child: Text(
-                  'DEMO',
-                  style: TextStyle(
-                    fontSize: 38.sp,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.grey[300],
-                  ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 300.w,
+                      child: Form(
+                        key: emrFormKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            TextFormField(
+                              initialValue: patientHistoryModel.symptoms,
+                              decoration: InputDecoration(
+                                labelText: 'Symptoms',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                              ),
+                              minLines: 3,
+                              maxLines: 3,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Masukan symptoms';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                if (value != null) {
+                                  patientHistoryModel.symptoms = value;
+                                }
+                              },
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            TextFormField(
+                              initialValue: patientHistoryModel.doctorDiagnose,
+                              decoration: InputDecoration(
+                                labelText: 'Diagnose',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                              ),
+                              minLines: 3,
+                              maxLines: 3,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Masukan diagnosa';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                if (value != null) {
+                                  patientHistoryModel.doctorDiagnose = value;
+                                }
+                              },
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            TextFormField(
+                              initialValue: patientHistoryModel.icd10Code,
+                              decoration: InputDecoration(
+                                labelText: 'ICD 10 Code',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Masukan ICD 10 Code';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                if (value != null) {
+                                  patientHistoryModel.icd10Code = value;
+                                }
+                              },
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            TextFormField(
+                              initialValue: patientHistoryModel.icd10Name,
+                              decoration: InputDecoration(
+                                labelText: 'ICD 10 Name',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Masukan ICD 10 Name';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                if (value != null) {
+                                  patientHistoryModel.icd10Name = value;
+                                }
+                              },
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                try {
+                                  if (emrFormKey.currentState!.validate()) {
+                                    emrFormKey.currentState!.save();
+                                    patientHistoryModel.consultationBy =
+                                        userProvider.user.id;
+                                    patientHistoryModel.isDone = true;
+                                    await DatabaseService.updatePatientHistory(
+                                        patientHistoryModel.toMap());
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text('Simpan berhasil'),
+                                      ));
+                                    }
+                                  }
+                                } catch (e) {
+                                  patientHistoryModel.consultationBy = 0;
+                                  patientHistoryModel.isDone = false;
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Text('Simpan gagal'),
+                                    ));
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.teal,
+                                foregroundColor: Colors.white,
+                                fixedSize: Size(150.w, 50.h),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                              ),
+                              child: Text(
+                                'Simpan',
+                                style: TextStyle(fontSize: 18.sp),
+                              ),
+                            ),
+                            SizedBox(height: 55.h),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -213,6 +213,18 @@ class DatabaseService {
     }
   }
 
+  static Future<int> countPatientAll() async {
+    try {
+      final count = Sqflite.firstIntValue(
+          await _db.rawQuery('SELECT COUNT(*) FROM TbPatient'));
+      printDebug('Database countPatientAll() success');
+      return count ?? 0;
+    } catch (e) {
+      printDebug('countPatientAll() error: $e', isError: true);
+      return Future.error(e);
+    }
+  }
+
   static Future<List<Map<String, dynamic>>> getPatientHistoryAll() async {
     try {
       List<Map<String, dynamic>> list =
@@ -237,6 +249,35 @@ class DatabaseService {
       return list;
     } catch (e) {
       printDebug('getPatientHistoryByRecordNumber($recordNumber) error: $e',
+          isError: true);
+      return Future.error(e);
+    }
+  }
+
+  static Future<void> updatePatientHistory(
+      Map<String, dynamic> patientHistoryMap) async {
+    try {
+      int count = await _db.transaction<int>((txn) async {
+        return await txn.rawUpdate(
+            'UPDATE TbPatientHistory SET consultation_by = ?, symptoms = ?, doctor_diagnose = ?, icd_10_code = ?, icd_10_name = ?, is_done = ? WHERE id = ?',
+            [
+              patientHistoryMap['consultation_by'],
+              patientHistoryMap['symptoms'],
+              patientHistoryMap['doctor_diagnose'],
+              patientHistoryMap['icd_10_code'],
+              patientHistoryMap['icd_10_name'],
+              patientHistoryMap['is_done'],
+              patientHistoryMap['id']
+            ]);
+      });
+      if (count > 0) {
+        printDebug(
+            'Database updatePatientHistory(${patientHistoryMap['id']}) success');
+      } else {
+        throw Exception();
+      }
+    } catch (e) {
+      printDebug('updatePatientHistory(${patientHistoryMap['id']}) error: $e',
           isError: true);
       return Future.error(e);
     }

@@ -30,7 +30,7 @@ class _LoginViewState extends State<LoginView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'SAMAWI',
+              'SIMAWI',
               style: TextStyle(
                 fontSize: 38.sp,
                 fontWeight: FontWeight.w700,
@@ -110,6 +110,7 @@ class _LoginViewState extends State<LoginView> {
                                 userProvider.user = UserModel.fromMap(userMap);
                                 final icdToken =
                                     await IcdApiService().initIcdApi();
+
                                 userProvider.accessToken = icdToken;
                                 userProvider.setState(() {});
                                 if (context.mounted) {
