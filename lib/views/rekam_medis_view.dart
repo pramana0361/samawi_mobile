@@ -106,47 +106,85 @@ class _RekamMedisViewState extends State<RekamMedisView> {
                             SizedBox(
                               height: 10.h,
                             ),
-                            TextFormField(
-                              initialValue: patientHistoryModel.icd10Code,
-                              decoration: InputDecoration(
-                                labelText: 'ICD 10 Code',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16.r),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Masukan ICD 10 Code';
-                                }
-                                return null;
+                            Autocomplete<String>(
+                              fieldViewBuilder: (context, textEditingController,
+                                  focusNode, onFieldSubmitted) {
+                                textEditingController.text =
+                                    patientHistoryModel.icd10Code;
+                                return TextFormField(
+                                  controller: textEditingController,
+                                  decoration: InputDecoration(
+                                    labelText: 'ICD 10 Code',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16.r),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Masukan ICD 10 Code';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    if (value != null) {
+                                      patientHistoryModel.icd10Code = value;
+                                    }
+                                  },
+                                );
                               },
-                              onSaved: (value) {
-                                if (value != null) {
-                                  patientHistoryModel.icd10Code = value;
+                              optionsBuilder: (textEditingValue) {
+                                if (textEditingValue.text.isEmpty) {
+                                  return const Iterable<String>.empty();
                                 }
+                                // TODO: Fetch ICD 10 code
+                                return [''].where(
+                                  (element) {
+                                    return element.contains(
+                                        textEditingValue.text.toUpperCase());
+                                  },
+                                );
                               },
                             ),
                             SizedBox(
                               height: 10.h,
                             ),
-                            TextFormField(
-                              initialValue: patientHistoryModel.icd10Name,
-                              decoration: InputDecoration(
-                                labelText: 'ICD 10 Name',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16.r),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Masukan ICD 10 Name';
-                                }
-                                return null;
+                            Autocomplete<String>(
+                              fieldViewBuilder: (context, textEditingController,
+                                  focusNode, onFieldSubmitted) {
+                                textEditingController.text =
+                                    patientHistoryModel.icd10Code;
+                                return TextFormField(
+                                  initialValue: patientHistoryModel.icd10Name,
+                                  decoration: InputDecoration(
+                                    labelText: 'ICD 10 Name',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16.r),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Masukan ICD 10 Name';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    if (value != null) {
+                                      patientHistoryModel.icd10Name = value;
+                                    }
+                                  },
+                                );
                               },
-                              onSaved: (value) {
-                                if (value != null) {
-                                  patientHistoryModel.icd10Name = value;
+                              optionsBuilder: (textEditingValue) {
+                                if (textEditingValue.text.isEmpty) {
+                                  return const Iterable<String>.empty();
                                 }
+                                // TODO: Fetch ICD 10 name
+                                return [''].where(
+                                  (element) {
+                                    return element.contains(
+                                        textEditingValue.text.toUpperCase());
+                                  },
+                                );
                               },
                             ),
                             SizedBox(
@@ -296,7 +334,7 @@ class _RekamMedisViewState extends State<RekamMedisView> {
             title: const Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'SAMAWI',
+                'SIMAWI',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.teal,

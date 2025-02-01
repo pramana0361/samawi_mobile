@@ -230,7 +230,7 @@ class _ManageUserViewState extends State<ManageUserView> {
             title: const Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'SAMAWI',
+                'SIMAWI',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.teal,

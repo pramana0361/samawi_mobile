@@ -391,7 +391,7 @@ class _RegistrasiPasienViewState extends State<RegistrasiPasienView> {
             title: const Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'SAMAWI',
+                'SIMAWI',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.teal,

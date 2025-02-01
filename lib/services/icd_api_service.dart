@@ -9,10 +9,8 @@ class IcdApiService {
       "https://icdaccessmanagement.who.int/connect/token";
   static const _scope = "icdapi_access";
   static const _grantType = 'client_credentials';
-  static const _clientID =
-      'c7305c6d-4676-4b44-8933-2869e9c8b0b0_02bda0f2-d643-41de-aa10-127389d09de4'; // ICD API WHO client id
-  static const _clientSecret =
-      'l3BPvG05RqnO7VYpi7H4wPqiy40VWsBZsuR57QiHVN4='; // ICD API WHO client secret
+  static const _clientID = '...'; // ICD API WHO client id
+  static const _clientSecret = '...'; // ICD API WHO client secret
 
   static IcdApiService? _instance;
   factory IcdApiService() => _instance ??= IcdApiService._();
